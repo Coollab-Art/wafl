@@ -1,12 +1,5 @@
 cmake_minimum_required(VERSION 3.8)
 
-# ## IF( header-only library )
-add_library(wafl INTERFACE)
-add_library(wafl::wafl ALIAS wafl)
-target_compile_features(wafl INTERFACE cxx_std_20)
-target_include_directories(wafl INTERFACE include)
-
-# ## ELSEIF( library with .cpp files )
 add_library(wafl)
 add_library(wafl::wafl ALIAS wafl)
 target_compile_features(wafl PUBLIC cxx_std_20)
@@ -15,7 +8,6 @@ target_compile_features(wafl PUBLIC cxx_std_20)
 target_include_directories(wafl PUBLIC include)
 target_sources(wafl PRIVATE
     src/wafl.cpp
-    src/other_file.cpp
 )
 
 if(WAFL_ENABLE_WARNINGS_AS_ERRORS)
@@ -29,5 +21,3 @@ if(WAFL_ENABLE_WARNINGS_AS_ERRORS)
 else()
     message("-- [wafl] Not using warnings as errors for wafl")
 endif()
-
-# ## ENDIF
