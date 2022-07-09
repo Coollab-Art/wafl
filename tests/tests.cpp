@@ -32,3 +32,32 @@ TEST_CASE("Two tests exactly similar return 1")
 {
     CHECK(similarity({.input = "test", .reference = "test"}) == 1);
 }
+
+struct MyData {
+    std::string name;
+    int         value;
+
+    friend auto operator==(const MyData&, const MyData&) -> bool = default;
+};
+
+using Container = std::vector<MyData>;
+
+TEST_CASE("Search filter")
+{
+    const auto res = search_results("hello", std::vector<MyData>{
+                                                 {"Hi", 0},
+                                                 {"Hello World", 1},
+                                                 {"Something", 9},
+                                                 {"Hello", 2},
+                                                 {"Helo", 3},
+                                             },
+                                    [](const MyData& my_data) -> std::string_view {
+                                        return my_data.name;
+                                    });
+
+    CHECK(res == std::vector<MyData>{
+                     {"Hello", 2},
+                     {"Hello World", 1},
+                     {"Helo", 3},
+                 });
+}

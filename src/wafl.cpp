@@ -3,10 +3,10 @@
 auto similarity(search_params p) -> float
 {
     float proximity_coef = 0.f;
-    for (int i = 0; i < p.input.size(); i++)
+    for (int i = 0; i < (int)p.input.size(); i++)
     {
         float proximity_coef_tmp = 0.f;
-        for (int j = 0; j < p.reference.size(); j++)
+        for (int j = 0; j < (int)p.reference.size(); j++)
         {
             if (p.input[i] == p.reference[j])
             {
@@ -22,8 +22,6 @@ auto similarity(search_params p) -> float
         }
         proximity_coef += proximity_coef_tmp;
     }
-    // float avg_size = (float)(p.input.size() + p.reference.size()) / 2;
-    // return 1 < proximity_coef / p.input.size();
     size_t smallest_word_size = std::min(p.input.size(), p.input.size());
     return proximity_coef / smallest_word_size;
 }
@@ -43,4 +41,21 @@ auto similarity_match(search_params p) -> Matches
     {
         return Matches::NotAtAll;
     }
+}
+
+auto comparator_between_two_values(float first, float second) -> bool
+{
+    if (first >= second)
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+
+auto remove_NotAtAll_from_vector(float value) -> bool
+{
+    return value <= 0.5f;
 }
