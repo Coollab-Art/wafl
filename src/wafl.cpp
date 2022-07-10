@@ -1,8 +1,12 @@
 #include "../include/wafl/wafl.hpp"
 
+// si le mot à chercher est plus long que le mot d'entrée, ne pas diviser par la longueur du mot le plus court
+// mais par un coefficient plus grand entre les deux longueurs.
+
 auto similarity(search_params p) -> float
 {
     float proximity_coef = 0.f;
+    int   j_used         = -1;
     for (int i = 0; i < (int)p.input.size(); i++)
     {
         float proximity_coef_tmp = 0.f;
@@ -13,8 +17,10 @@ auto similarity(search_params p) -> float
                 if (i == j)
                 {
                     proximity_coef_tmp = 1.f;
+                    j_used             = j;
+                    break;
                 }
-                else if (proximity_coef_tmp < (1 / std::abs(float(j - i))))
+                else if (proximity_coef_tmp < (1 / std::abs(float(j - i))) && j != j_used)
                 {
                     proximity_coef_tmp = 1.f / std::abs(float(j - i)) / 2.f;
                 }
@@ -22,8 +28,18 @@ auto similarity(search_params p) -> float
         }
         proximity_coef += proximity_coef_tmp;
     }
-    size_t smallest_word_size = std::min(p.input.size(), p.input.size());
-    return proximity_coef / smallest_word_size;
+    // size_t word_size = std::min(p.input.size(), p.reference.size());
+    float word_size = 1.f;
+    if (p.input.size() < p.reference.size())
+    {
+        word_size = p.input.size() * 0.95f + p.reference.size() * 0.05f;
+    }
+    else
+    {
+        word_size = p.input.size() * 0.1f + p.reference.size() * 0.9f;
+    }
+
+    return proximity_coef / word_size;
 }
 
 auto similarity_match(search_params p) -> Matches

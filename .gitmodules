@@ -4,3 +4,6 @@
 [submodule "tooling"]
 	path = tooling
 	url = https://github.com/CoolLibs/tooling
+[submodule "lib/ZipIterator"]
+	path = lib/ZipIterator
+	url = https://github.com/CoolLibs/ZipIterator.git

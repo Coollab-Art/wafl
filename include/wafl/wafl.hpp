@@ -4,14 +4,14 @@
 #include <string>
 #include <string_view>
 #include <vector>
-#include "sort_two_vectors.hpp"
+#include "../lib/ZipIterator/ZipIterator.hpp"
 
 // TOOD namespace wafl
 
 enum class Matches {
-    Strongly,
-    Weakly,
     NotAtAll,
+    Weakly,
+    Strongly,
 };
 
 struct search_params {
@@ -36,11 +36,25 @@ auto search_results(std::string_view input, const Container& container, StringGe
     std::transform(container.begin(), container.end(), float_container.begin(), [&](auto&& element) {
         return similarity({.input = input, .reference = get_string(element)});
     });
-    auto test = std::remove_if(float_container.begin(), float_container.end(), remove_NotAtAll_from_vector);
+    // auto test = std::remove_if(float_container.begin(), float_container.end(), [&](auto&& element) {
+    //     return remove_NotAtAll_from_vector(element);
+    // });
 
-    std::sort(
-        SortHelper::ValueIterator<std::vector<float>, Container>{float_container.begin(), container_copy.begin()},
-        SortHelper::ValueIterator<std::vector<float>, Container>{float_container.end(), container_copy.end()}
-    );
+    for (int i = 0; i < (int)float_container.size(); i++)
+    {
+        if (remove_NotAtAll_from_vector(float_container[i]))
+        {
+            float_container.erase(float_container.begin() + i);
+            container_copy.erase(container_copy.begin() + i);
+            i--;
+        }
+    }
+
+    auto zip = Zip(float_container, container_copy);
+    std::sort(zip.rbegin(), zip.rend());
+    // std::sort(
+    //     SortHelper::ValueIterator<std::vector<float>, Container>{float_container.begin(), container_copy.begin()},
+    //     SortHelper::ValueIterator<std::vector<float>, Container>{float_container.end(), container_copy.end()}
+    // );
     return container_copy;
 }
