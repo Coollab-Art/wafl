@@ -18,18 +18,18 @@ std::ostream& operator<<(std::ostream& output, std::vector<T> const& values)
 
 TEST_CASE("testing the search bar function")
 {
-    // true
+    // Strongly
     CHECK(similarity_match({.input = "test", .reference = "test2"}) == Matches::Strongly);
     CHECK(similarity_match({.input = "ceci est un test", .reference = "cei erst un tset"}) == Matches::Strongly);
     CHECK(similarity_match({.input = "hello", .reference = "helo"}) == Matches::Strongly);
-    CHECK(similarity_match({.input = "tentative", .reference = "tntatvei"}) == Matches::Weakly);
 
-    // false (on the limit)
-    CHECK(similarity_match({.input = "test", .reference = "tsey"}) == Matches::NotAtAll);
-    CHECK(similarity_match({.input = "test", .reference = "etts"}) == Matches::NotAtAll);
-    CHECK(similarity_match({.input = "hello", .reference = "hi"}) == Matches::NotAtAll);
+    // Weakly
+    CHECK(similarity_match({.input = "tentative", .reference = "tntatvei"}) == Matches::Weakly);
+    CHECK(similarity_match({.input = "test", .reference = "tsey"}) == Matches::Weakly);
+    CHECK(similarity_match({.input = "test", .reference = "etts"}) == Matches::Weakly);
 
     // false
+    CHECK(similarity_match({.input = "hello", .reference = "hi"}) == Matches::NotAtAll);
     CHECK(similarity_match({.input = "rouge", .reference = "eguor"}) == Matches::NotAtAll);
 }
 
@@ -54,9 +54,24 @@ TEST_CASE("Test similarity function")
 TEST_CASE("Two tests exactly similar return 1")
 {
     CHECK(similarity({.input = "test", .reference = "test"}) == 1);
+    CHECK(similarity({.input = "test2", .reference = "test2"}) == 1);
 }
 
-// TODO upper lower case,chiffre,ponctuation
+TEST_CASE("The punctuation has no importance")
+{
+    CHECK(similarity({.input = "test", .reference = "te,st"}) == 1);
+    CHECK(similarity({.input = "tes,t", .reference = "test"}) == 1);
+    CHECK(similarity({.input = "tes,t", .reference = "te,st"}) == 1);
+    CHECK(similarity_match({.input = "HelloWorld", .reference = "Hello, World"}) == Matches::Strongly);
+    CHECK(similarity_match({.input = "Hello, World", .reference = "HelloWorld"}) == Matches::Strongly);
+}
+
+TEST_CASE("The case has no importance")
+{
+    CHECK(similarity({.input = "teSt", .reference = "Test"}) == 1);
+}
+
+// TODO ponctuation
 
 struct MyData {
     std::string name;

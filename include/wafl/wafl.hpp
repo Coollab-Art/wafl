@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <string>
 #include <string_view>
+#include <tuple>
 #include <vector>
 #include "../lib/ZipIterator/ZipIterator.hpp"
 
@@ -18,6 +19,9 @@ struct search_params {
     std::string_view input;
     std::string_view reference;
 };
+
+auto delete_punctuation(std::string& str) -> void;
+auto to_lower(std::string_view str) -> std::string;
 
 auto similarity(search_params) -> float;
 auto similarity_match(search_params) -> Matches;
@@ -36,25 +40,17 @@ auto search_results(std::string_view input, const Container& container, StringGe
     std::transform(container.begin(), container.end(), float_container.begin(), [&](auto&& element) {
         return similarity({.input = input, .reference = get_string(element)});
     });
-    // auto test = std::remove_if(float_container.begin(), float_container.end(), [&](auto&& element) {
-    //     return remove_NotAtAll_from_vector(element);
-    // });
-
-    for (int i = 0; i < (int)float_container.size(); i++)
-    {
-        if (remove_NotAtAll_from_vector(float_container[i]))
-        {
-            float_container.erase(float_container.begin() + i);
-            container_copy.erase(container_copy.begin() + i);
-            i--;
-        }
-    }
 
     auto zip = Zip(float_container, container_copy);
+
+    auto it = std::remove_if(zip.begin(), zip.end(), [&](auto&& element) {
+        return remove_NotAtAll_from_vector(std::get<0>(element.val()));
+    });
+
+    float_container.erase(std::get<0>(it.get_iterator()), float_container.end());
+    container_copy.erase(std::get<1>(it.get_iterator()), container_copy.end());
+
     std::sort(zip.rbegin(), zip.rend());
-    // std::sort(
-    //     SortHelper::ValueIterator<std::vector<float>, Container>{float_container.begin(), container_copy.begin()},
-    //     SortHelper::ValueIterator<std::vector<float>, Container>{float_container.end(), container_copy.end()}
-    // );
+
     return container_copy;
 }
