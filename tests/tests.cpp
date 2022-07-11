@@ -22,6 +22,7 @@ TEST_CASE("testing the search bar function")
     CHECK(similarity_match({.input = "test", .reference = "test2"}) == Matches::Strongly);
     CHECK(similarity_match({.input = "ceci est un test", .reference = "cei erst un tset"}) == Matches::Strongly);
     CHECK(similarity_match({.input = "hello", .reference = "helo"}) == Matches::Strongly);
+    CHECK(similarity_match({.input = "world", .reference = "hello world"}) == Matches::Strongly);
 
     // Weakly
     CHECK(similarity_match({.input = "tentative", .reference = "tntatvei"}) == Matches::Weakly);
@@ -69,6 +70,12 @@ TEST_CASE("The punctuation has no importance")
 TEST_CASE("The case has no importance")
 {
     CHECK(similarity({.input = "teSt", .reference = "Test"}) == 1);
+}
+
+TEST_CASE("With more than one word")
+{
+    CHECK(similarity_match({.input = "world", .reference = "hello world"}) == Matches::Strongly);
+    CHECK(similarity_match({.input = "world test jfesffezf", .reference = "hello world"}) == Matches::Strongly);
 }
 
 // TODO ponctuation
