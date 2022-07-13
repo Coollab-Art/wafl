@@ -75,7 +75,7 @@ TEST_CASE("The case has no importance")
 TEST_CASE("With more than one word")
 {
     CHECK(similarity_match({.input = "world", .reference = "hello world"}) == Matches::Strongly);
-    CHECK(similarity_match({.input = "world test jfesffezf", .reference = "hello world"}) == Matches::Strongly);
+    CHECK(similarity_match({.input = "world test jfesffezf", .reference = "hello world"}) == Matches::Weakly);
 }
 
 // TODO ponctuation
