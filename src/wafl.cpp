@@ -14,12 +14,12 @@ auto to_lower(std::string_view str) -> std::string
 
 void delete_punctuation(std::string& str)
 {
-    std::erase_if(str, std::ispunct);
+    std::erase_if(str, ::ispunct);
 }
 
 void delete_spaces(std::string& str)
 {
-    std::erase_if(str, std::isspace);
+    std::erase_if(str, ::isspace);
 }
 
 auto find_next_word_position(
