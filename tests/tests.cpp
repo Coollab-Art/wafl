@@ -36,13 +36,19 @@ TEST_CASE("testing the search bar function")
     CHECK(similarity_match({.input = "rouge", .reference = "eguor"}) == Matches::NotAtAll);
 }
 
-TEST_CASE("Matches the beginning of a sentence")
+TEST_CASE("If the input matches the beginning of the reference, this is a strong match.")
 {
     CHECK(similarity_match({.input = "test", .reference = "test mais beaucoup plus long"}) == Matches::Strongly);
-    CHECK(similarity_match({.input = "test mais beaucoup plus long", .reference = "test"}) == Matches::Weakly);
+    CHECK(similarity_match({.input = "test mais beaucoup plus long", .reference = "test"}) == Matches::Strongly);
     CHECK(similarity_match({.input = "test", .reference = "test"}) == Matches::Strongly);
     CHECK(similarity_match({.input = "test", .reference = "test     "}) == Matches::Strongly);
     CHECK(similarity_match({.input = "test", .reference = "testa"}) == Matches::Strongly);
+
+    CHECK(similarity_match({.input = "", .reference = "test"}) == wafl::Matches::Strongly);
+    CHECK(similarity_match({.input = "t", .reference = "test"}) == wafl::Matches::Strongly);
+    CHECK(similarity_match({.input = "te", .reference = "test"}) == wafl::Matches::Strongly);
+    CHECK(similarity_match({.input = "tes", .reference = "test"}) == wafl::Matches::Strongly);
+    CHECK(similarity_match({.input = "test", .reference = "test"}) == wafl::Matches::Strongly);
 }
 
 TEST_CASE("Test similarity function")
@@ -60,15 +66,6 @@ TEST_CASE("Two tests exactly similar return 1")
     CHECK(similarity({.input = "test2", .reference = "test2"}) == 1);
 }
 
-TEST_CASE("If the input matches the beginning of the reference, this is a strong match.")
-{
-    CHECK(similarity_match({.input = "", .reference = "test"}) == wafl::Matches::Strongly);
-    CHECK(similarity_match({.input = "t", .reference = "test"}) == wafl::Matches::Strongly);
-    CHECK(similarity_match({.input = "te", .reference = "test"}) == wafl::Matches::Strongly);
-    CHECK(similarity_match({.input = "tes", .reference = "test"}) == wafl::Matches::Strongly);
-    CHECK(similarity_match({.input = "test", .reference = "test"}) == wafl::Matches::Strongly);
-}
-
 TEST_CASE("The punctuation has no importance")
 {
     CHECK(similarity({.input = "test", .reference = "te,st"}) == 1);
@@ -81,6 +78,7 @@ TEST_CASE("The punctuation has no importance")
 TEST_CASE("The case has no importance")
 {
     CHECK(similarity({.input = "teSt", .reference = "Test"}) == 1);
+    CHECK(similarity({.input = "Lo", .reference = "lo"}) == 1.f);
 }
 
 TEST_CASE("With more than one word")

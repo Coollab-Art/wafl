@@ -145,17 +145,18 @@ static auto starts_with(std::string_view input, std::string_view reference) -> b
 
 auto similarity(search_params p) -> float
 {
-    if (p.input == p.reference)
+    std::string input     = to_lower(p.input);
+    std::string reference = to_lower(p.reference);
+
+    if (input == reference)
     {
         return 1.f; // HACK(JF)
     }
-    if (starts_with(p.input, p.reference))
+    if (starts_with(input, reference))
     {
         return 0.99f; // HACK(JF)
     }
 
-    std::string input     = to_lower(p.input);
-    std::string reference = to_lower(p.reference);
     delete_punctuation(input);
     delete_punctuation(reference);
     std::vector<std::string> input_words     = split_into_words(input, " ");
@@ -181,11 +182,11 @@ auto similarity(search_params p) -> float
 auto similarity_match(search_params p) -> Matches
 {
     float proximity_coef = similarity(p);
-    if (proximity_coef > .75f)
+    if (proximity_coef > 0.5f)
     {
         return Matches::Strongly;
     }
-    else if (proximity_coef >= .5f)
+    else if (proximity_coef > 0.1f)
     {
         return Matches::Weakly;
     }
