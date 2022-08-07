@@ -3,6 +3,8 @@
 #include <cstring>
 #include <optional>
 
+namespace wafl {
+
 auto to_lower(std::string_view str) -> std::string
 {
     std::string res = "";
@@ -136,8 +138,22 @@ auto search_by_string(
     return proximity_coef;
 }
 
+static auto starts_with(std::string_view input, std::string_view reference) -> bool
+{
+    return reference.rfind(input, 0) == 0;
+}
+
 auto similarity(search_params p) -> float
 {
+    if (p.input == p.reference)
+    {
+        return 1.f; // HACK(JF)
+    }
+    if (starts_with(p.input, p.reference))
+    {
+        return 0.99f; // HACK(JF)
+    }
+
     std::string input     = to_lower(p.input);
     std::string reference = to_lower(p.reference);
     delete_punctuation(input);
@@ -188,3 +204,5 @@ auto remove_NotAtAll_from_vector(float value) -> bool
 {
     return value < 0.5f;
 }
+
+} // namespace wafl

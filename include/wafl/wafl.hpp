@@ -5,9 +5,17 @@
 #include <string_view>
 #include <tuple>
 #include <vector>
-#include "../lib/ZipIterator/ZipIterator.hpp"
 
-// TOOD namespace wafl
+#if defined(_MSC_VER)
+#pragma warning(push)
+#pragma warning(disable : 4702)
+#endif
+#include "../lib/ZipIterator/ZipIterator.hpp"
+#if defined(_MSC_VER)
+#pragma warning(pop)
+#endif
+
+namespace wafl {
 
 enum class Matches {
     NotAtAll,
@@ -54,3 +62,5 @@ auto search_results(std::string_view input, const Container& container, StringGe
 
     return container_copy;
 }
+
+} // namespace wafl

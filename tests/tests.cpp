@@ -16,6 +16,8 @@ std::ostream& operator<<(std::ostream& output, std::vector<T> const& values)
 }
 } // namespace std
 
+using namespace wafl; // TODO(JF) remove me
+
 TEST_CASE("testing the search bar function")
 {
     // Strongly
@@ -56,6 +58,15 @@ TEST_CASE("Two tests exactly similar return 1")
 {
     CHECK(similarity({.input = "test", .reference = "test"}) == 1);
     CHECK(similarity({.input = "test2", .reference = "test2"}) == 1);
+}
+
+TEST_CASE("If the input matches the beginning of the reference, this is a strong match.")
+{
+    CHECK(similarity_match({.input = "", .reference = "test"}) == wafl::Matches::Strongly);
+    CHECK(similarity_match({.input = "t", .reference = "test"}) == wafl::Matches::Strongly);
+    CHECK(similarity_match({.input = "te", .reference = "test"}) == wafl::Matches::Strongly);
+    CHECK(similarity_match({.input = "tes", .reference = "test"}) == wafl::Matches::Strongly);
+    CHECK(similarity_match({.input = "test", .reference = "test"}) == wafl::Matches::Strongly);
 }
 
 TEST_CASE("The punctuation has no importance")
