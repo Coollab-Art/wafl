@@ -60,6 +60,14 @@ TEST_CASE("Test similarity function")
     CHECK(similarity({.input = "hello", .reference = "helo"}) >= 0.8f);
 }
 
+TEST_CASE("Beeing off by one letter is not a problem")
+{
+    CHECK(similaritym_match({.input = "cPommand", .reference = "command"}) == wafl::Matches::Strongly);
+    CHECK(similaritym_match({.input = "cQom", .reference = "command"}) == wafl::Matches::Strongly);
+    CHECK(similaritym_match({.input = "cLo", .reference = "command"}) == wafl::Matches::Strongly);
+    CHECK(similaritym_match({.input = "commanPd", .reference = "command"}) == wafl::Matches::Strongly);
+}
+
 TEST_CASE("Two tests exactly similar return 1")
 {
     CHECK(similarity({.input = "test", .reference = "test"}) == 1);
