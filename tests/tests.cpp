@@ -62,10 +62,10 @@ TEST_CASE("Test similarity function")
 
 TEST_CASE("Beeing off by one letter is not a problem")
 {
-    CHECK(similaritym_match({.input = "cPommand", .reference = "command"}) == wafl::Matches::Strongly);
-    CHECK(similaritym_match({.input = "cQom", .reference = "command"}) == wafl::Matches::Strongly);
-    CHECK(similaritym_match({.input = "cLo", .reference = "command"}) == wafl::Matches::Strongly);
-    CHECK(similaritym_match({.input = "commanPd", .reference = "command"}) == wafl::Matches::Strongly);
+    CHECK(similarity_match({.input = "cPommand", .reference = "command"}) == wafl::Matches::Strongly);
+    CHECK(similarity_match({.input = "cQom", .reference = "command"}) == wafl::Matches::Strongly);
+    CHECK(similarity_match({.input = "cLo", .reference = "command"}) == wafl::Matches::Strongly);
+    CHECK(similarity_match({.input = "commanPd", .reference = "command"}) == wafl::Matches::Strongly);
 }
 
 TEST_CASE("Two tests exactly similar return 1")
