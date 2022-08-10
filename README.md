@@ -2,7 +2,7 @@
 
 ## Including
 
-To add this library to your project, simply add those two lines to your *CMakeLists.txt*:
+To add this library to your project, simply add these two lines to your *CMakeLists.txt*:
 ```cmake
 add_subdirectory(path/to/wafl)
 target_link_libraries(${PROJECT_NAME} PRIVATE wafl::wafl)
