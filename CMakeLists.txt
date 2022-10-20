@@ -10,14 +10,19 @@ target_sources(wafl PRIVATE
     src/wafl.cpp
 )
 
-if(WAFL_ENABLE_WARNINGS_AS_ERRORS)
-    message("-- [wafl] Enabling warnings as errors for wafl")
-
-    if(MSVC)
-        target_compile_options(wafl PRIVATE /WX /W4)
-    else()
-        target_compile_options(wafl PRIVATE -Werror -Wall -Wextra -Wpedantic -pedantic-errors -Wconversion -Wsign-conversion)
-    endif()
+# Set warning level
+if(MSVC)
+    target_compile_options(wafl PRIVATE /W4)
 else()
-    message("-- [wafl] Not using warnings as errors for wafl")
+    target_compile_options(wafl PRIVATE -Wall -Wextra -Wpedantic -pedantic-errors -Wconversion -Wsign-conversion)
+endif()
+
+# Maybe enable warnings as errors
+set(WARNINGS_AS_ERRORS_FOR_WAFL OFF CACHE BOOL "ON iff you want to treat warnings as errors")
+if(WARNINGS_AS_ERRORS_FOR_WAFL)
+    if(MSVC)
+        target_compile_options(wafl PRIVATE /WX)
+    else()
+        target_compile_options(wafl PRIVATE -Werror)
+    endif()
 endif()
