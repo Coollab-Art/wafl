@@ -17,9 +17,9 @@ auto to_lower(std::string_view str) -> std::string
 static void keep_alphanumerics_and_spaces(std::string& str)
 {
     std::erase_if(str, [](char c) {
-        return c != ' ' &&
-               (c < 'A' || c > 'z') &&
-               (c < '0' || c > '9');
+        return c != ' '
+               && (c < 'A' || c > 'z')
+               && (c < '0' || c > '9');
     });
 }
 

@@ -128,8 +128,8 @@ TEST_CASE("Search filter")
                                     });
 
     CHECK(res == std::vector<MyData>{
-                     {"hello", 2},
-                     {"helo", 3},
-                     {"hell World", 1},
-                 });
+              {"hello", 2},
+              {"helo", 3},
+              {"hell World", 1},
+          });
 }
