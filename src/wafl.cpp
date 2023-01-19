@@ -14,14 +14,20 @@ auto to_lower(std::string_view str) -> std::string
     return res;
 }
 
-void delete_punctuation(std::string& str)
+static void keep_alphanumerics_and_spaces(std::string& str)
 {
-    std::erase_if(str, ::ispunct);
+    std::erase_if(str, [](char c) {
+        return c != ' ' &&
+               (c < 'A' || c > 'z') &&
+               (c < '0' || c > '9');
+    });
 }
 
-void delete_spaces(std::string& str)
+static void delete_spaces(std::string& str)
 {
-    std::erase_if(str, ::isspace);
+    std::erase_if(str, [](char c) {
+        return c == ' ';
+    });
 }
 
 auto find_next_word_position(
@@ -157,8 +163,8 @@ auto similarity(search_params p) -> float
         return 0.99f; // HACK(JF)
     }
 
-    delete_punctuation(input);
-    delete_punctuation(reference);
+    keep_alphanumerics_and_spaces(input);
+    keep_alphanumerics_and_spaces(reference);
     std::vector<std::string> input_words     = split_into_words(input, " ");
     std::vector<std::string> reference_words = split_into_words(reference, " ");
     delete_spaces(input);

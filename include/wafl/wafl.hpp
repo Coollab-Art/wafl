@@ -28,7 +28,6 @@ struct search_params {
     std::string_view reference;
 };
 
-auto delete_punctuation(std::string& str) -> void;
 auto to_lower(std::string_view str) -> std::string;
 
 auto similarity(search_params) -> float;
