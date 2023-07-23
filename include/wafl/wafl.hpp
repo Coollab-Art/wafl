@@ -41,6 +41,9 @@ auto remove_NotAtAll_from_vector(float value) -> bool;
 template<typename Container, typename StringGetter> // assert StringGetter is a function from Container::value_type to std::string_view
 auto search_results(std::string_view input, const Container& container, StringGetter&& get_string) -> Container
 {
+    if (input.empty())
+        return container;
+
     auto               container_copy = container;
     std::vector<float> float_container;
     float_container.resize(container.size());
