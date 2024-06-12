@@ -36,6 +36,14 @@ auto similarity_match(search_params) -> Matches;
 auto comparator_between_two_values(float first, float second) -> bool;
 auto remove_NotAtAll_from_vector(float value) -> bool;
 
+/// Finds the word the best matches `input` in the `references` container
+auto find_best_match(auto&& references, std::string_view input)
+{
+    return *std::max_element(references.begin(), references.end(), [&](auto&& a, auto&& b) {
+        return similarity({.input = input, .reference = a}) < similarity({.input = input, .reference = b});
+    });
+}
+
 // Container == std::vector<std::string>
 // StringGetter == [](const std::string& str) -> std::string_view { return str; }
 template<typename Container, typename StringGetter> // assert StringGetter is a function from Container::value_type to std::string_view
